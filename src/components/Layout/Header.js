@@ -1,4 +1,17 @@
-// src/components/Layout/Header.js
+/**
+ * Header Component
+ * 
+ * Main navigation header for the Bluestock application.
+ * Provides responsive navigation, user authentication status, and branding.
+ * 
+ * Features:
+ * - Responsive design with mobile-first approach
+ * - User authentication state management
+ * - Professional navigation with active states
+ * - Accessible menu interactions
+ * - Optimized performance with memoization
+ */
+
 import React, { memo, useCallback, useState, useEffect } from 'react';
 import { 
   AppBar, 
@@ -12,11 +25,31 @@ import {
   Menu,
   MenuItem,
   Typography,
-  Divider
+  Divider,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  ListItemButton
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { AdminPanelSettings, TrendingUp, Group, Inventory, AccountBalance, FiberNew, Login, PersonAdd, Logout, AccountCircle } from '@mui/icons-material';
+import { 
+  AdminPanelSettings, 
+  TrendingUp, 
+  Group, 
+  Inventory, 
+  AccountBalance, 
+  FiberNew, 
+  Login, 
+  PersonAdd, 
+  Logout, 
+  AccountCircle,
+  Menu as MenuIcon,
+  Close as CloseIcon
+} from '@mui/icons-material';
 import pfizerLogo from '../../Pfizer.png';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -108,8 +141,10 @@ const Header = () => {
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const [user, setUser] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     // Check for logged in user
@@ -141,166 +176,295 @@ const Header = () => {
     localStorage.removeItem('user');
     setUser(null);
     setAnchorEl(null);
+    setMobileMenuOpen(false);
     navigate('/');
   };
 
+  const handleMobileMenuToggle = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const handleMobileNavigation = (path) => {
+    navigate(path);
+    setMobileMenuOpen(false);
+  };
+
+  const navigationItems = [
+    { path: '/', label: 'IPO', icon: TrendingUp },
+    { path: '/community', label: 'Community', icon: Group },
+    { path: '/products', label: 'Products', icon: Inventory },
+    { path: '/brokers', label: 'Brokers', icon: AccountBalance },
+    { path: '/live-news', label: 'Live News', icon: FiberNew, badge: 'NEW' },
+    { path: '/admin', label: 'Admin', icon: AdminPanelSettings },
+  ];
+
   return (
-    <StyledAppBar position="sticky" elevation={0}>
-      <Container maxWidth="xl">
-        <Toolbar sx={{ px: { xs: 0, sm: 0 }, justifyContent: 'space-between' }}>
-          {/* Logo Section */}
-          <Logo onClick={handleLogoClick}>
-            <LogoImage 
-              src={pfizerLogo} 
-              alt="Pfizer Logo" 
-              loading="lazy"
-              decoding="async"
-            />
-          </Logo>
+    <>
+      <StyledAppBar position="sticky" elevation={0}>
+        <Container maxWidth="xl">
+          <Toolbar sx={{ px: { xs: 0, sm: 0 }, justifyContent: 'space-between' }}>
+            {/* Logo Section */}
+            <Logo onClick={handleLogoClick}>
+              <LogoImage 
+                src={pfizerLogo} 
+                alt="Pfizer Logo" 
+                loading="lazy"
+                decoding="async"
+              />
+            </Logo>
 
-          {/* Centered Navigation */}
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: isMobile ? 0.5 : 1, 
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            flex: 1,
-            mx: 2
-          }}>
-            <NavButton
-              active={isActive('/')}
-              onClick={() => handleNavigation('/')}
-              startIcon={!isMobile ? <TrendingUp sx={{ fontSize: 16 }} /> : null}
-              size={isMobile ? 'small' : 'medium'}
-            >
-              IPO
-            </NavButton>
-            
+            {/* Desktop Navigation */}
             {!isMobile && (
-              <>
-                <NavButton
-                  active={isActive('/community')}
-                  onClick={() => handleNavigation('/community')}
-                  startIcon={<Group sx={{ fontSize: 16 }} />}
-                >
-                  Community
-                </NavButton>
-                
-                <NavButton
-                  active={isActive('/products')}
-                  onClick={() => handleNavigation('/products')}
-                  startIcon={<Inventory sx={{ fontSize: 16 }} />}
-                >
-                  Products
-                </NavButton>
-                
-                <NavButton
-                  active={isActive('/brokers')}
-                  onClick={() => handleNavigation('/brokers')}
-                  startIcon={<AccountBalance sx={{ fontSize: 16 }} />}
-                >
-                  Brokers
-                </NavButton>
-              </>
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: isTablet ? 0.5 : 1, 
+                justifyContent: 'center',
+                flex: 1,
+                mx: 2
+              }}>
+                {navigationItems.map((item) => (
+                  <NavButton
+                    key={item.path}
+                    active={item.path === '/admin' ? location.pathname.startsWith('/admin') : isActive(item.path)}
+                    onClick={() => handleNavigation(item.path)}
+                    startIcon={<item.icon sx={{ fontSize: 16 }} />}
+                    size={isTablet ? 'small' : 'medium'}
+                    sx={{ position: item.badge ? 'relative' : 'inherit' }}
+                  >
+                    {item.label}
+                    {item.badge && <NewBadge>{item.badge}</NewBadge>}
+                  </NavButton>
+                ))}
+              </Box>
             )}
-            
-            <NavButton
-              active={isActive('/live-news')}
-              onClick={() => handleNavigation('/live-news')}
-              startIcon={!isMobile ? <FiberNew sx={{ fontSize: 16 }} /> : null}
-              sx={{ position: 'relative' }}
-              size={isMobile ? 'small' : 'medium'}
-            >
-              {isMobile ? 'News' : 'Live News'}
-              <NewBadge>NEW</NewBadge>
-            </NavButton>
-            
-            <NavButton
-              active={location.pathname.startsWith('/admin')}
-              onClick={() => handleNavigation('/admin')}
-              startIcon={!isMobile ? <AdminPanelSettings sx={{ fontSize: 16 }} /> : null}
-              size={isMobile ? 'small' : 'medium'}
-            >
-              Admin
-            </NavButton>
-          </Box>
 
-          {/* Authentication Section */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            {user ? (
-              <>
-                <Button
-                  onClick={handleUserMenuOpen}
-                  sx={{ 
-                    textTransform: 'none',
-                    color: 'text.primary',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1
-                  }}
+            {/* Mobile Navigation - Only show essential items */}
+            {isMobile && (
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 0.5,
+                flex: 1,
+                mx: 1,
+                justifyContent: 'center'
+              }}>
+                <NavButton
+                  active={isActive('/')}
+                  onClick={() => handleNavigation('/')}
+                  size="small"
                 >
-                  <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
-                    {user.name.charAt(0).toUpperCase()}
-                  </Avatar>
-                  {!isMobile && (
-                    <Typography variant="body2">
-                      {user.name.split(' ')[0]}
-                    </Typography>
-                  )}
-                </Button>
-                
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleUserMenuClose}
-                  transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                  IPO
+                </NavButton>
+                <NavButton
+                  active={isActive('/live-news')}
+                  onClick={() => handleNavigation('/live-news')}
+                  sx={{ position: 'relative' }}
+                  size="small"
                 >
-                  <MenuItem disabled>
-                    <Box>
-                      <Typography variant="subtitle2">{user.name}</Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {user.email}
-                      </Typography>
-                    </Box>
-                  </MenuItem>
-                  <Divider />
-                  <MenuItem onClick={handleUserMenuClose}>
-                    <AccountCircle sx={{ mr: 1 }} />
-                    Profile
-                  </MenuItem>
-                  <MenuItem onClick={handleLogout}>
-                    <Logout sx={{ mr: 1 }} />
-                    Logout
-                  </MenuItem>
-                </Menu>
-              </>
-            ) : (
-              <>
-                <AuthButton
-                  variant="outlined"
-                  onClick={() => handleNavigation('/signin')}
-                  startIcon={<Login sx={{ fontSize: 16 }} />}
-                  size={isMobile ? 'small' : 'medium'}
-                >
-                  Sign In
-                </AuthButton>
-                
-                <AuthButton
-                  variant="contained"
-                  onClick={() => handleNavigation('/signup')}
-                  startIcon={<PersonAdd sx={{ fontSize: 16 }} />}
-                  size={isMobile ? 'small' : 'medium'}
-                >
-                  Sign Up
-                </AuthButton>
-              </>
+                  News
+                  <NewBadge>NEW</NewBadge>
+                </NavButton>
+              </Box>
             )}
-          </Box>
-        </Toolbar>
-      </Container>
-    </StyledAppBar>
+
+            {/* Right Side - Auth + Mobile Menu */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              {/* Mobile Menu Button */}
+              {isMobile && (
+                <IconButton
+                  onClick={handleMobileMenuToggle}
+                  sx={{ 
+                    color: 'text.primary',
+                    p: 1
+                  }}
+                  aria-label="Open navigation menu"
+                >
+                  <MenuIcon />
+                </IconButton>
+              )}
+
+              {/* Authentication Section */}
+              {user ? (
+                <>
+                  <Button
+                    onClick={handleUserMenuOpen}
+                    sx={{ 
+                      textTransform: 'none',
+                      color: 'text.primary',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      minWidth: 'auto',
+                      p: 1
+                    }}
+                  >
+                    <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
+                      {user.name.charAt(0).toUpperCase()}
+                    </Avatar>
+                    {!isMobile && (
+                      <Typography variant="body2">
+                        {user.name.split(' ')[0]}
+                      </Typography>
+                    )}
+                  </Button>
+                  
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleUserMenuClose}
+                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                  >
+                    <MenuItem disabled>
+                      <Box>
+                        <Typography variant="subtitle2">{user.name}</Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {user.email}
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem onClick={handleUserMenuClose}>
+                      <AccountCircle sx={{ mr: 1 }} />
+                      Profile
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>
+                      <Logout sx={{ mr: 1 }} />
+                      Logout
+                    </MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                <>
+                  {!isMobile ? (
+                    <>
+                      <AuthButton
+                        variant="outlined"
+                        onClick={() => handleNavigation('/signin')}
+                        startIcon={<Login sx={{ fontSize: 16 }} />}
+                        size={isTablet ? 'small' : 'medium'}
+                      >
+                        Sign In
+                      </AuthButton>
+                      
+                      <AuthButton
+                        variant="contained"
+                        onClick={() => handleNavigation('/signup')}
+                        startIcon={<PersonAdd sx={{ fontSize: 16 }} />}
+                        size={isTablet ? 'small' : 'medium'}
+                      >
+                        Sign Up
+                      </AuthButton>
+                    </>
+                  ) : (
+                    <AuthButton
+                      variant="contained"
+                      onClick={() => handleNavigation('/signin')}
+                      size="small"
+                      sx={{ minWidth: 'auto', px: 2 }}
+                    >
+                      Login
+                    </AuthButton>
+                  )}
+                </>
+              )}
+            </Box>
+          </Toolbar>
+        </Container>
+      </StyledAppBar>
+
+      {/* Mobile Drawer Menu */}
+      <Drawer
+        anchor="right"
+        open={mobileMenuOpen}
+        onClose={handleMobileMenuToggle}
+        sx={{
+          '& .MuiDrawer-paper': {
+            width: 280,
+            bgcolor: 'background.paper',
+          },
+        }}
+      >
+        <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: 1, borderColor: 'divider' }}>
+          <Typography variant="h6" color="primary">
+            Navigation
+          </Typography>
+          <IconButton onClick={handleMobileMenuToggle}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        
+        <List sx={{ pt: 0 }}>
+          {navigationItems.map((item) => (
+            <ListItem key={item.path} disablePadding>
+              <ListItemButton
+                onClick={() => handleMobileNavigation(item.path)}
+                selected={item.path === '/admin' ? location.pathname.startsWith('/admin') : isActive(item.path)}
+                sx={{
+                  '&.Mui-selected': {
+                    bgcolor: 'primary.main',
+                    color: 'white',
+                    '& .MuiListItemIcon-root': {
+                      color: 'white',
+                    },
+                  },
+                }}
+              >
+                <ListItemIcon>
+                  <item.icon />
+                </ListItemIcon>
+                <ListItemText 
+                  primary={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      {item.label}
+                      {item.badge && (
+                        <Box
+                          sx={{
+                            bgcolor: '#ff4444',
+                            color: 'white',
+                            fontSize: '0.6rem',
+                            fontWeight: 'bold',
+                            px: 1,
+                            py: 0.25,
+                            borderRadius: '10px',
+                            textTransform: 'uppercase',
+                          }}
+                        >
+                          {item.badge}
+                        </Box>
+                      )}
+                    </Box>
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+          
+          {!user && (
+            <>
+              <Divider sx={{ my: 1 }} />
+              <ListItem disablePadding>
+                <ListItemButton onClick={() => handleMobileNavigation('/signin')}>
+                  <ListItemIcon>
+                    <Login />
+                  </ListItemIcon>
+                  <ListItemText primary="Sign In" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton onClick={() => handleMobileNavigation('/signup')}>
+                  <ListItemIcon>
+                    <PersonAdd />
+                  </ListItemIcon>
+                  <ListItemText primary="Sign Up" />
+                </ListItemButton>
+              </ListItem>
+            </>
+          )}
+        </List>
+      </Drawer>
+    </>
   );
 };
 

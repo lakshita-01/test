@@ -1,4 +1,19 @@
-// src/components/Layout/Footer.js
+/**
+ * Footer Component
+ * 
+ * Professional footer with company information, navigation links, and contact details.
+ * Provides comprehensive site navigation and important legal links.
+ * 
+ * Features:
+ * - Responsive grid layout
+ * - Company branding and description
+ * - Quick navigation links
+ * - Contact information
+ * - Legal links and copyright
+ * - Professional gradient design
+ * - Accessible link interactions
+ */
+
 import React from 'react';
 import { 
   Box, 

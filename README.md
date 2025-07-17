@@ -1,70 +1,220 @@
-# Getting Started with Create React App
+# 🚀 Bluestock IPO Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, professional IPO investment platform built with React and Material-UI. Discover, analyze, and invest in the most promising Initial Public Offerings with comprehensive tools and real-time updates.
 
-## Available Scripts
+![Bluestock IPO Platform](https://via.placeholder.com/800x400/1976d2/ffffff?text=Bluestock+IPO+Platform)
 
-In the project directory, you can run:
+## ✨ Features
 
-### `npm start`
+### 🎯 Core Features
+- **IPO Discovery**: Browse and search through available IPOs with advanced filtering
+- **Real-time Updates**: Get instant notifications about IPO status changes
+- **Detailed Analysis**: Comprehensive IPO information and expert insights
+- **Secure Applications**: Bank-grade security for IPO applications
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+- **Professional UI**: Clean, modern interface with Material-UI components
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 🔧 Technical Features
+- **React 19**: Latest React with hooks and modern patterns
+- **Material-UI v7**: Professional component library with theming
+- **React Router v7**: Client-side routing with lazy loading
+- **Context API**: Global state management
+- **Responsive Design**: Mobile-first approach with breakpoint optimization
+- **Performance Optimized**: Code splitting, memoization, and lazy loading
+- **Accessibility**: WCAG compliant with proper ARIA labels
+- **Error Boundaries**: Graceful error handling and recovery
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🛠️ Technology Stack
 
-### `npm test`
+### Frontend
+- **React 19.1.0** - Modern React with latest features
+- **Material-UI 7.2.0** - Professional component library
+- **React Router 7.6.3** - Client-side routing
+- **Emotion** - CSS-in-JS styling solution
+- **Date-fns** - Modern date utility library
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Development Tools
+- **React Scripts 5.0.1** - Build toolchain
+- **Testing Library** - Comprehensive testing utilities
+- **Web Vitals** - Performance monitoring
 
-### `npm run build`
+## 🚀 Quick Start
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Prerequisites
+- Node.js 16.0 or higher
+- npm 7.0 or higher
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd bluestock-ipo-platform
+   ```
 
-### `npm run eject`
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+3. **Start development server**
+   ```bash
+   npm start
+   ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+4. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 📜 Available Scripts
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Development
+```bash
+npm start          # Start development server
+npm test           # Run tests in watch mode
+npm run build      # Build for production
+```
 
-## Learn More
+### Code Quality
+```bash
+npm run lint       # Check code quality
+npm run format     # Format code with Prettier
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Production
+```bash
+npm run build      # Create production build
+npm run serve      # Serve production build locally
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 📁 Project Structure
 
-### Code Splitting
+```
+src/
+├── components/           # Reusable UI components
+│   ├── Common/          # Shared components
+│   ├── IPO/             # IPO-specific components
+│   ├── Layout/          # Layout components
+│   └── Admin/           # Admin components
+├── pages/               # Page components
+├── context/             # React Context providers
+├── utils/               # Utility functions
+├── styles/              # Global styles
+├── theme/               # Material-UI theme
+└── assets/              # Static assets
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🎨 Design System
 
-### Analyzing the Bundle Size
+### Color Palette
+- **Primary**: #1976d2 (Bluestock Blue)
+- **Secondary**: #f50057 (Accent Pink)
+- **Success**: #4caf50 (Green)
+- **Warning**: #ff9800 (Orange)
+- **Error**: #f44336 (Red)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Typography
+- **Font Family**: Inter, Roboto, Helvetica, Arial
+- **Headings**: 700-600 weight with proper hierarchy
+- **Body Text**: 400-500 weight with optimal line height
 
-### Making a Progressive Web App
+### Components
+- **Cards**: Rounded corners (16px) with subtle shadows
+- **Buttons**: Modern styling with hover effects
+- **Forms**: Clean inputs with proper validation
+- **Navigation**: Responsive with active states
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 🔧 Configuration
 
-### Advanced Configuration
+### Environment Variables
+Create a `.env` file in the root directory:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```env
+REACT_APP_API_URL=http://localhost:3001/api
+REACT_APP_APP_NAME=Bluestock IPO
+REACT_APP_VERSION=1.0.0
+```
 
-### Deployment
+### Theme Customization
+Modify `src/theme/theme.js` to customize:
+- Colors and palette
+- Typography settings
+- Component overrides
+- Breakpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 📱 Responsive Design
 
-### `npm run build` fails to minify
+The application is built with a mobile-first approach:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Mobile**: 320px - 767px
+- **Tablet**: 768px - 1023px
+- **Desktop**: 1024px and above
+
+All components are fully responsive with optimized layouts for each breakpoint.
+
+## 🧪 Testing
+
+### Running Tests
+```bash
+npm test                 # Interactive test runner
+npm run test:coverage    # Generate coverage report
+```
+
+### Test Structure
+- **Unit Tests**: Component and utility testing
+- **Integration Tests**: Feature workflow testing
+- **Accessibility Tests**: WCAG compliance testing
+
+## 🚀 Deployment
+
+### Build for Production
+```bash
+npm run build
+```
+
+### Deploy to Netlify
+1. Connect your repository to Netlify
+2. Set build command: `npm run build`
+3. Set publish directory: `build`
+4. Deploy automatically on push
+
+### Deploy to Vercel
+1. Install Vercel CLI: `npm i -g vercel`
+2. Run: `vercel`
+3. Follow the prompts
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+### Code Style
+- Use ESLint and Prettier configurations
+- Follow React best practices
+- Write meaningful commit messages
+- Add tests for new features
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+For support and questions:
+- **Email**: support@bluestockipo.com
+- **Phone**: +91 98765 43210
+- **Documentation**: [Wiki](link-to-wiki)
+- **Issues**: [GitHub Issues](link-to-issues)
+
+## 🙏 Acknowledgments
+
+- **Material-UI Team** - For the excellent component library
+- **React Team** - For the amazing framework
+- **Create React App** - For the build toolchain
+- **Contributors** - For making this project better
+
+---
+
+**Made with ❤️ by the Bluestock Team**

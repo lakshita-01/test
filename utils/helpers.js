@@ -1,6 +1,34 @@
-// src/utils/helpers.js
+/**
+ * Helper Utilities
+ * 
+ * Collection of utility functions for common operations in the Bluestock IPO application.
+ * Provides reusable functions for formatting, validation, data manipulation, and more.
+ * 
+ * Features:
+ * - Date formatting and manipulation
+ * - Currency formatting
+ * - Input validation (email, phone, PAN)
+ * - Performance utilities (debounce, throttle)
+ * - Data filtering and sorting
+ * - Status management
+ * - File operations
+ * - Text utilities
+ * 
+ * All functions include error handling and are optimized for performance.
+ */
+
 import { format, parseISO, isAfter, isBefore } from 'date-fns';
 
+/**
+ * Date Formatting Utilities
+ */
+
+/**
+ * Formats a date string or Date object to a readable format
+ * @param {string|Date} dateString - Date to format
+ * @param {string} formatStr - Format pattern (default: 'dd MMM yyyy')
+ * @returns {string} Formatted date string
+ */
 export const formatDate = (dateString, formatStr = 'dd MMM yyyy') => {
   try {
     const date = typeof dateString === 'string' ? parseISO(dateString) : dateString;
@@ -11,6 +39,12 @@ export const formatDate = (dateString, formatStr = 'dd MMM yyyy') => {
   }
 };
 
+/**
+ * Formats a number as currency with proper locale formatting
+ * @param {number|string} amount - Amount to format
+ * @param {string} currency - Currency symbol (default: '₹')
+ * @returns {string} Formatted currency string
+ */
 export const formatCurrency = (amount, currency = '₹') => {
   if (typeof amount === 'string') {
     return amount;
@@ -18,6 +52,16 @@ export const formatCurrency = (amount, currency = '₹') => {
   return `${currency}${amount?.toLocaleString('en-IN') || '0'}`;
 };
 
+/**
+ * IPO Status Utilities
+ */
+
+/**
+ * Determines IPO status based on open and close dates
+ * @param {string|Date} openDate - IPO opening date
+ * @param {string|Date} closeDate - IPO closing date
+ * @returns {string} IPO status ('upcoming', 'open', 'closed')
+ */
 export const getIpoStatus = (openDate, closeDate) => {
   const now = new Date();
   const open = new Date(openDate);

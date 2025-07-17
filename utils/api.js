@@ -1,4 +1,22 @@
 
+/**
+ * API Utilities
+ * 
+ * Centralized API service layer for the Bluestock IPO application.
+ * Provides mock data and simulated API calls for development and testing.
+ * 
+ * Features:
+ * - Mock IPO data with realistic structure
+ * - Simulated network delays for realistic testing
+ * - Error handling and logging
+ * - Authentication simulation
+ * - CRUD operations for IPO management
+ * - Filtering and search capabilities
+ * 
+ * Note: In production, replace mock data with actual API endpoints
+ */
+
+// Mock IPO data for development and testing
 const mockIpos = [
   {
     id: 1,
