@@ -15,7 +15,8 @@ const initialState = {
   },
   selectedIpo: null,
   user: null,
-  isAuthenticated: false
+  isAuthenticated: false,
+  darkMode: localStorage.getItem('darkMode') === 'true' || false
 };
 
 // Action types
@@ -30,7 +31,8 @@ export const ACTION_TYPES = {
   SET_SELECTED_IPO: 'SET_SELECTED_IPO',
   SET_USER: 'SET_USER',
   SET_AUTHENTICATED: 'SET_AUTHENTICATED',
-  CLEAR_ERROR: 'CLEAR_ERROR'
+  CLEAR_ERROR: 'CLEAR_ERROR',
+  TOGGLE_DARK_MODE: 'TOGGLE_DARK_MODE'
 };
 
 // Reducer function
@@ -114,6 +116,14 @@ const appReducer = (state, action) => {
       return {
         ...state,
         isAuthenticated: action.payload
+      };
+    
+    case ACTION_TYPES.TOGGLE_DARK_MODE:
+      const newDarkMode = !state.darkMode;
+      localStorage.setItem('darkMode', newDarkMode.toString());
+      return {
+        ...state,
+        darkMode: newDarkMode
       };
     
     default:
@@ -231,6 +241,10 @@ export const AppProvider = ({ children }) => {
     checkAuth: () => {
       const isAuth = api.isAuthenticated();
       dispatch({ type: ACTION_TYPES.SET_AUTHENTICATED, payload: isAuth });
+    },
+
+    toggleDarkMode: () => {
+      dispatch({ type: ACTION_TYPES.TOGGLE_DARK_MODE });
     }
   }), [dispatch]);
 

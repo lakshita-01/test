@@ -48,9 +48,14 @@ import {
   Logout, 
   AccountCircle,
   Menu as MenuIcon,
-  Close as CloseIcon
+  Close as CloseIcon,
+  Category as CategoryIcon,
+  Apps as AppsIcon,
+  DarkMode,
+  LightMode
 } from '@mui/icons-material';
 import pfizerLogo from '../../Pfizer.png';
+import { useApp } from '../../context/AppContext';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: '#ffffff',
@@ -119,21 +124,44 @@ const AuthButton = styled(Button)(({ theme, variant }) => ({
   fontWeight: 500,
   borderRadius: 8,
   padding: theme.spacing(1, 2),
-  marginLeft: theme.spacing(1),
+  marginLeft: theme.spacing(0.5),
+  transition: 'all 0.2s ease-in-out',
   ...(variant === 'outlined' && {
     borderColor: theme.palette.primary.main,
     color: theme.palette.primary.main,
     '&:hover': {
       backgroundColor: theme.palette.primary.main + '08',
+      transform: 'translateY(-1px)',
+      boxShadow: '0 2px 8px rgba(37, 99, 235, 0.2)',
     },
   }),
   ...(variant === 'contained' && {
     backgroundColor: theme.palette.primary.main,
     color: 'white',
+    boxShadow: '0 2px 4px rgba(37, 99, 235, 0.2)',
     '&:hover': {
       backgroundColor: theme.palette.primary.dark,
+      transform: 'translateY(-1px)',
+      boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)',
     },
   }),
+}));
+
+const MobileCategoriesButton = styled(IconButton)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  color: 'white',
+  borderRadius: 12,
+  padding: theme.spacing(1, 2),
+  transition: 'all 0.2s ease-in-out',
+  '&:hover': {
+    backgroundColor: theme.palette.primary.dark,
+    transform: 'translateY(-1px)',
+    boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)',
+  },
+  '& .MuiTypography-root': {
+    fontWeight: 600,
+    fontSize: '0.875rem',
+  }
 }));
 
 const Header = () => {
@@ -145,6 +173,8 @@ const Header = () => {
   const [user, setUser] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { state, actions } = useApp();
+  const { darkMode } = state;
 
   useEffect(() => {
     // Check for logged in user
@@ -198,6 +228,18 @@ const Header = () => {
     { path: '/admin', label: 'Admin', icon: AdminPanelSettings },
   ];
 
+  const getItemDescription = (path) => {
+    const descriptions = {
+      '/': 'Browse and invest in IPOs',
+      '/community': 'Connect with investors',
+      '/products': 'Investment products',
+      '/brokers': 'Compare brokers',
+      '/live-news': 'Latest market news',
+      '/admin': 'Admin dashboard'
+    };
+    return descriptions[path] || '';
+  };
+
   return (
     <>
       <StyledAppBar position="sticky" elevation={0}>
@@ -239,51 +281,46 @@ const Header = () => {
               </Box>
             )}
 
-            {/* Mobile Navigation - Only show essential items */}
+            {/* Mobile Navigation - Show Categories Icon */}
             {isMobile && (
               <Box sx={{ 
                 display: 'flex', 
                 alignItems: 'center', 
-                gap: 0.5,
+                gap: 1,
                 flex: 1,
                 mx: 1,
                 justifyContent: 'center'
               }}>
-                <NavButton
-                  active={isActive('/')}
-                  onClick={() => handleNavigation('/')}
-                  size="small"
+                <MobileCategoriesButton
+                  onClick={handleMobileMenuToggle}
+                  aria-label="Open categories menu"
                 >
-                  IPO
-                </NavButton>
-                <NavButton
-                  active={isActive('/live-news')}
-                  onClick={() => handleNavigation('/live-news')}
-                  sx={{ position: 'relative' }}
-                  size="small"
-                >
-                  News
-                  <NewBadge>NEW</NewBadge>
-                </NavButton>
+                  <AppsIcon sx={{ mr: 0.5, fontSize: 18 }} />
+                  <Typography variant="body2">
+                    Categories
+                  </Typography>
+                </MobileCategoriesButton>
               </Box>
             )}
 
-            {/* Right Side - Auth + Mobile Menu */}
+            {/* Right Side - Auth Section */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              {/* Mobile Menu Button */}
-              {isMobile && (
-                <IconButton
-                  onClick={handleMobileMenuToggle}
-                  sx={{ 
-                    color: 'text.primary',
-                    p: 1
-                  }}
-                  aria-label="Open navigation menu"
-                >
-                  <MenuIcon />
-                </IconButton>
-              )}
-
+              {/* Dark Mode Toggle */}
+              <IconButton
+                onClick={actions.toggleDarkMode}
+                sx={{ 
+                  color: 'text.primary',
+                  '&:hover': {
+                    backgroundColor: 'primary.main',
+                    color: 'white',
+                  },
+                  transition: 'all 0.2s ease-in-out'
+                }}
+                aria-label="Toggle dark mode"
+              >
+                {darkMode ? <LightMode /> : <DarkMode />}
+              </IconButton>
+              
               {/* Authentication Section */}
               {user ? (
                 <>
@@ -358,14 +395,37 @@ const Header = () => {
                       </AuthButton>
                     </>
                   ) : (
-                    <AuthButton
-                      variant="contained"
-                      onClick={() => handleNavigation('/signin')}
-                      size="small"
-                      sx={{ minWidth: 'auto', px: 2 }}
-                    >
-                      Login
-                    </AuthButton>
+                    <Box sx={{ display: 'flex', gap: 0.5 }}>
+                      <AuthButton
+                        variant="outlined"
+                        onClick={() => handleNavigation('/signin')}
+                        size="small"
+                        sx={{ 
+                          minWidth: 'auto', 
+                          px: 1.5,
+                          py: 0.5,
+                          fontSize: '0.75rem',
+                          borderWidth: 1.5,
+                          fontWeight: 600
+                        }}
+                      >
+                        Sign In
+                      </AuthButton>
+                      <AuthButton
+                        variant="contained"
+                        onClick={() => handleNavigation('/signup')}
+                        size="small"
+                        sx={{ 
+                          minWidth: 'auto', 
+                          px: 1.5,
+                          py: 0.5,
+                          fontSize: '0.75rem',
+                          fontWeight: 600
+                        }}
+                      >
+                        Sign Up
+                      </AuthButton>
+                    </Box>
                   )}
                 </>
               )}
@@ -374,34 +434,54 @@ const Header = () => {
         </Container>
       </StyledAppBar>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Categories Drawer Menu */}
       <Drawer
         anchor="right"
         open={mobileMenuOpen}
         onClose={handleMobileMenuToggle}
         sx={{
           '& .MuiDrawer-paper': {
-            width: 280,
+            width: 300,
             bgcolor: 'background.paper',
           },
         }}
       >
-        <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: 1, borderColor: 'divider' }}>
-          <Typography variant="h6" color="primary">
-            Navigation
-          </Typography>
-          <IconButton onClick={handleMobileMenuToggle}>
+        <Box sx={{ 
+          p: 2, 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          borderBottom: 1, 
+          borderColor: 'divider',
+          bgcolor: 'primary.main',
+          color: 'white'
+        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <AppsIcon />
+            <Typography variant="h6" color="inherit">
+              All Categories
+            </Typography>
+          </Box>
+          <IconButton onClick={handleMobileMenuToggle} sx={{ color: 'white' }}>
             <CloseIcon />
           </IconButton>
         </Box>
         
         <List sx={{ pt: 0 }}>
+          {/* Main Categories Section */}
+          <Box sx={{ p: 2, bgcolor: 'grey.50' }}>
+            <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+              Main Categories
+            </Typography>
+          </Box>
+          
           {navigationItems.map((item) => (
             <ListItem key={item.path} disablePadding>
               <ListItemButton
                 onClick={() => handleMobileNavigation(item.path)}
                 selected={item.path === '/admin' ? location.pathname.startsWith('/admin') : isActive(item.path)}
                 sx={{
+                  py: 1.5,
                   '&.Mui-selected': {
                     bgcolor: 'primary.main',
                     color: 'white',
@@ -409,15 +489,24 @@ const Header = () => {
                       color: 'white',
                     },
                   },
+                  '&:hover': {
+                    bgcolor: 'primary.light',
+                    color: 'white',
+                    '& .MuiListItemIcon-root': {
+                      color: 'white',
+                    },
+                  }
                 }}
               >
-                <ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 40 }}>
                   <item.icon />
                 </ListItemIcon>
                 <ListItemText 
                   primary={
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      {item.label}
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                        {item.label}
+                      </Typography>
                       {item.badge && (
                         <Box
                           sx={{
@@ -436,32 +525,11 @@ const Header = () => {
                       )}
                     </Box>
                   }
+                  secondary={getItemDescription(item.path)}
                 />
               </ListItemButton>
             </ListItem>
           ))}
-          
-          {!user && (
-            <>
-              <Divider sx={{ my: 1 }} />
-              <ListItem disablePadding>
-                <ListItemButton onClick={() => handleMobileNavigation('/signin')}>
-                  <ListItemIcon>
-                    <Login />
-                  </ListItemIcon>
-                  <ListItemText primary="Sign In" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton onClick={() => handleMobileNavigation('/signup')}>
-                  <ListItemIcon>
-                    <PersonAdd />
-                  </ListItemIcon>
-                  <ListItemText primary="Sign Up" />
-                </ListItemButton>
-              </ListItem>
-            </>
-          )}
         </List>
       </Drawer>
     </>

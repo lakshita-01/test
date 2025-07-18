@@ -29,19 +29,6 @@ const LayoutContainer = styled(Box)(({ theme }) => ({
 const MainContent = styled(Box)(({ theme }) => ({
   flex: 1,
   backgroundColor: theme.palette.background.default,
-  paddingTop: theme.spacing(2),
-  paddingBottom: theme.spacing(4),
-  
-  // Responsive padding
-  [theme.breakpoints.up('sm')]: {
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(6),
-  },
-  
-  [theme.breakpoints.up('md')]: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(8),
-  },
 }));
 
 const ContentWrapper = styled(Container)(({ theme }) => ({
@@ -73,9 +60,7 @@ const Layout = ({ children }) => {
       
       {/* Main content area */}
       <MainContent component="main" role="main">
-        <ContentWrapper>
-          {children}
-        </ContentWrapper>
+        {children}
       </MainContent>
       
       {/* Footer */}

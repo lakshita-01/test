@@ -34,6 +34,7 @@ const SignInPage = lazy(() => import('./pages/SignInPage'));
 const SignUpPage = lazy(() => import('./pages/SignUpPage'));
 const AdminLogin = lazy(() => import('./components/Admin/AdminLogin'));
 const IpoAdminDashboard = lazy(() => import('./components/IpoAdminDashboard'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 /**
  * Loading fallback component displayed during lazy loading
@@ -93,8 +94,8 @@ function App() {
                   <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
                   <Route path="/admin/dashboard" element={<IpoAdminDashboard />} />
                   
-                  {/* Catch-all route */}
-                  <Route path="*" element={<Navigate to="/" replace />} />
+                  {/* 404 Not Found route */}
+                  <Route path="*" element={<NotFoundPage />} />
                 </Routes>
               </Suspense>
             </Layout>

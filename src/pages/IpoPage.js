@@ -6,11 +6,13 @@ import { useApp } from '../context/AppContext';
 import SearchFilters from '../components/IPO/SearchFilters';
 import IpoList from '../components/IpoList';
 import IpoDetailModal from '../components/IPO/IpoDetailModal';
-import HeroSection from '../components/Common/HeroSection';
+import Homepage from '../components/Homepage/Homepage';
 
 const PageContainer = styled(Container)(({ theme }) => ({
-  paddingTop: theme.spacing(4),
+  paddingTop: theme.spacing(6),
   paddingBottom: theme.spacing(4),
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
 }));
 
 const SectionTitle = styled(Typography)(({ theme }) => ({
@@ -89,18 +91,12 @@ const IpoPage = () => {
 
   return (
     <>
-      <HeroSection onExploreClick={handleExploreClick} />
+      <Homepage />
       
       <PageContainer maxWidth="xl" ref={ipoListRef}>
-        <SectionTitle variant="h3" component="h2">
-          Available IPOs
-        </SectionTitle>
 
-        <SearchFilters
-          filters={filters}
-          onFiltersChange={handleFiltersChange}
-          totalResults={ipos.length}
-        />
+
+
 
         <IpoList
           ipos={ipos}

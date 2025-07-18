@@ -4,40 +4,7 @@
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
 // Mock data for development
-const mockIpos = [
-  {
-    id: '1',
-    companyName: 'Tech Innovations Ltd',
-    sector: 'Technology',
-    priceBand: '₹100-120',
-    priceBandMin: '100',
-    priceBandMax: '120',
-    lotSize: '100',
-    minInvestment: '10000',
-    issueSize: '₹500 Cr',
-    ipoOpenDate: '2024-01-15',
-    ipoCloseDate: '2024-01-18',
-    listingDate: '2024-01-22',
-    description: 'Leading technology company specializing in AI and machine learning solutions.',
-    rhpLink: 'https://example.com/rhp1.pdf'
-  },
-  {
-    id: '2',
-    companyName: 'Green Energy Solutions',
-    sector: 'Energy',
-    priceBand: '₹80-95',
-    priceBandMin: '80',
-    priceBandMax: '95',
-    lotSize: '150',
-    minInvestment: '12000',
-    issueSize: '₹300 Cr',
-    ipoOpenDate: '2024-02-01',
-    ipoCloseDate: '2024-02-05',
-    listingDate: '2024-02-10',
-    description: 'Renewable energy company focused on solar and wind power solutions.',
-    rhpLink: 'https://example.com/rhp2.pdf'
-  }
-];
+const mockIpos = [];
 
 // Helper function to simulate API delay
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
