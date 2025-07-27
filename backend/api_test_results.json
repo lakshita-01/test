@@ -1,0 +1,173 @@
+[
+  {
+    "endpoint": "/api/auth/login",
+    "method": "POST",
+    "status_code": 200,
+    "expected_status": 200,
+    "success": true,
+    "description": "Admin login",
+    "timestamp": "2025-07-27T20:22:26.638428"
+  },
+  {
+    "endpoint": "/api/auth/logout",
+    "method": "POST",
+    "status_code": 200,
+    "expected_status": 200,
+    "success": true,
+    "description": "Admin logout",
+    "timestamp": "2025-07-27T20:22:28.709272"
+  },
+  {
+    "endpoint": "/api/companies",
+    "method": "GET",
+    "status_code": 200,
+    "expected_status": 200,
+    "success": true,
+    "description": "List all companies (Public)",
+    "timestamp": "2025-07-27T20:22:30.769022"
+  },
+  {
+    "endpoint": "/api/companies/3",
+    "method": "GET",
+    "status_code": 200,
+    "expected_status": 200,
+    "success": true,
+    "description": "Get company details (Public)",
+    "timestamp": "2025-07-27T20:22:32.828435"
+  },
+  {
+    "endpoint": "/api/companies",
+    "method": "POST",
+    "status_code": 201,
+    "expected_status": 201,
+    "success": true,
+    "description": "Add new company (Admin)",
+    "timestamp": "2025-07-27T20:22:34.945087"
+  },
+  {
+    "endpoint": "/api/companies/4",
+    "method": "PUT",
+    "status_code": 200,
+    "expected_status": 200,
+    "success": true,
+    "description": "Update company (Admin)",
+    "timestamp": "2025-07-27T20:22:37.017756"
+  },
+  {
+    "endpoint": "/api/ipos",
+    "method": "GET",
+    "status_code": 200,
+    "expected_status": 200,
+    "success": true,
+    "description": "Get all IPOs with pagination (Public)",
+    "timestamp": "2025-07-27T20:22:39.080857"
+  },
+  {
+    "endpoint": "/api/ipos/search",
+    "method": "GET",
+    "status_code": 200,
+    "expected_status": 200,
+    "success": true,
+    "description": "Search IPOs by keyword (Public)",
+    "timestamp": "2025-07-27T20:22:41.117805"
+  },
+  {
+    "endpoint": "/api/ipos/2",
+    "method": "GET",
+    "status_code": 200,
+    "expected_status": 200,
+    "success": true,
+    "description": "Get IPO details by ID (Public)",
+    "timestamp": "2025-07-27T20:22:45.263374"
+  },
+  {
+    "endpoint": "/api/ipos",
+    "method": "POST",
+    "status_code": 201,
+    "expected_status": 201,
+    "success": true,
+    "description": "Create new IPO (Admin)",
+    "timestamp": "2025-07-27T20:22:47.342133"
+  },
+  {
+    "endpoint": "/api/ipos/3",
+    "method": "PUT",
+    "status_code": 200,
+    "expected_status": 200,
+    "success": true,
+    "description": "Update IPO details (Admin)",
+    "timestamp": "2025-07-27T20:22:49.401391"
+  },
+  {
+    "endpoint": "/api/ipos/2/download",
+    "method": "GET",
+    "status_code": 404,
+    "expected_status": 404,
+    "success": true,
+    "description": "Download RHP document (Public)",
+    "timestamp": "2025-07-27T20:22:51.459787"
+  },
+  {
+    "endpoint": "/api/ipos/2/upload",
+    "method": "POST",
+    "status_code": 400,
+    "expected_status": 400,
+    "success": true,
+    "description": "Upload RHP document (Admin)",
+    "timestamp": "2025-07-27T20:22:53.523417"
+  },
+  {
+    "endpoint": "/api/ipos/2/delete-doc",
+    "method": "DELETE",
+    "status_code": 404,
+    "expected_status": 404,
+    "success": true,
+    "description": "Delete document (Admin)",
+    "timestamp": "2025-07-27T20:22:55.575191"
+  },
+  {
+    "endpoint": "/api/admin/stats",
+    "method": "GET",
+    "status_code": 200,
+    "expected_status": 200,
+    "success": true,
+    "description": "Get dashboard statistics (Admin)",
+    "timestamp": "2025-07-27T20:22:57.649313"
+  },
+  {
+    "endpoint": "/api/admin/logs",
+    "method": "GET",
+    "status_code": 200,
+    "expected_status": 200,
+    "success": true,
+    "description": "Get login logs and activities (Admin)",
+    "timestamp": "2025-07-27T20:22:59.744940"
+  },
+  {
+    "endpoint": "/swagger/",
+    "method": "GET",
+    "status_code": 200,
+    "expected_status": 200,
+    "success": true,
+    "description": "Swagger UI documentation",
+    "timestamp": "2025-07-27T20:23:01.879247"
+  },
+  {
+    "endpoint": "/redoc/",
+    "method": "GET",
+    "status_code": 200,
+    "expected_status": 200,
+    "success": true,
+    "description": "ReDoc documentation",
+    "timestamp": "2025-07-27T20:23:03.959822"
+  },
+  {
+    "endpoint": "/swagger.json",
+    "method": "GET",
+    "status_code": 200,
+    "expected_status": 200,
+    "success": true,
+    "description": "Swagger JSON schema",
+    "timestamp": "2025-07-27T20:23:06.079906"
+  }
+]
