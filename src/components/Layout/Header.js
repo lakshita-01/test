@@ -49,12 +49,13 @@ import {
   AccountCircle,
   Menu as MenuIcon,
   Close as CloseIcon,
-  Category as CategoryIcon,
+  ViewModule as CategoryIcon,
   Apps as AppsIcon,
   DarkMode,
-  LightMode
+  LightMode,
+  Api
 } from '@mui/icons-material';
-import pfizerLogo from '../../Pfizer.png';
+// BlueStock logo will be loaded from public folder
 import { useApp } from '../../context/AppContext';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -67,20 +68,48 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 const Logo = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(1),
+  gap: theme.spacing(0.5),
   cursor: 'pointer',
   transition: 'all 0.2s ease-in-out',
+  minWidth: 'fit-content',
+  flexShrink: 0,
   '&:hover': {
     transform: 'scale(1.02)'
-  }
+  },
+  // Mobile responsive adjustments
+  [theme.breakpoints.down('sm')]: {
+    gap: theme.spacing(0.25),
+    minWidth: 'auto',
+  },
+  [theme.breakpoints.down('xs')]: {
+    gap: theme.spacing(0.125),
+  },
 }));
 
 const LogoImage = styled('img')(({ theme }) => ({
-  height: 40,
+  height: 32,
   width: 'auto',
-  marginRight: theme.spacing(1),
+  marginLeft: theme.spacing(0.5),
   loading: 'lazy',
   decoding: 'async',
+  transition: 'all 0.3s ease-in-out',
+  // Mobile responsive sizing
+  [theme.breakpoints.down('sm')]: {
+    height: 24,
+    marginLeft: theme.spacing(0.25),
+  },
+  [theme.breakpoints.down('xs')]: {
+    height: 20,
+    marginLeft: theme.spacing(0.125),
+  },
+  // Tablet sizing
+  [theme.breakpoints.between('sm', 'md')]: {
+    height: 28,
+  },
+  // Large screen sizing
+  [theme.breakpoints.up('lg')]: {
+    height: 36,
+  },
 }));
 
 const NavButton = styled(Button)(({ theme, active }) => ({
@@ -220,11 +249,12 @@ const Header = () => {
   };
 
   const navigationItems = [
-    { path: '/', label: 'IPO', icon: TrendingUp },
+    { path: '/ipo', label: 'IPO', icon: TrendingUp },
     { path: '/community', label: 'Community', icon: Group },
     { path: '/products', label: 'Products', icon: Inventory },
     { path: '/brokers', label: 'Brokers', icon: AccountBalance },
     { path: '/live-news', label: 'Live News', icon: FiberNew, badge: 'NEW' },
+    { path: '/api', label: 'API', icon: Api },
     { path: '/admin', label: 'Admin', icon: AdminPanelSettings },
   ];
 
@@ -235,6 +265,7 @@ const Header = () => {
       '/products': 'Investment products',
       '/brokers': 'Compare brokers',
       '/live-news': 'Latest market news',
+      '/api': 'Developer API access',
       '/admin': 'Admin dashboard'
     };
     return descriptions[path] || '';
@@ -247,11 +278,33 @@ const Header = () => {
           <Toolbar sx={{ px: { xs: 0, sm: 0 }, justifyContent: 'space-between' }}>
             {/* Logo Section */}
             <Logo onClick={handleLogoClick}>
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{
+                  fontWeight: 700,
+                  background: 'linear-gradient(135deg, #2563eb, #7c3aed)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem', lg: '1.4rem' },
+                  letterSpacing: '-0.025em',
+                  marginRight: { xs: 0.5, sm: 1 },
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                BLUESTOCK
+              </Typography>
               <LogoImage 
-                src={pfizerLogo} 
-                alt="Pfizer Logo" 
+                src="/logo.png" 
+                alt="BlueStock Logo" 
                 loading="lazy"
                 decoding="async"
+                onError={(e) => {
+                  // Hide image if it fails to load
+                  e.target.style.display = 'none';
+                }}
               />
             </Logo>
 

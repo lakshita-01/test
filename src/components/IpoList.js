@@ -40,16 +40,8 @@ const IpoList = ({
   }
 
   if (!ipos || ipos.length === 0) {
-    return (
-      <EmptyState>
-        <Typography variant="h6" gutterBottom>
-          No IPOs Found
-        </Typography>
-        <Typography variant="body2">
-          There are no IPOs matching your current filters. Try adjusting your search criteria.
-        </Typography>
-      </EmptyState>
-    );
+    // Don't show empty state on homepage - just return null
+    return null;
   }
 
   return (

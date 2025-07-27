@@ -240,13 +240,30 @@ const SignInPage = () => {
             }}
           />
 
+          <Box sx={{ textAlign: 'right', mb: 2 }}>
+            <Link
+              component="button"
+              variant="body2"
+              onClick={() => navigate('/forgot-password')}
+              sx={{ 
+                textDecoration: 'none',
+                color: 'primary.main',
+                '&:hover': {
+                  textDecoration: 'underline',
+                }
+              }}
+            >
+              Forgot Password?
+            </Link>
+          </Box>
+
           <Button
             type="submit"
             fullWidth
             variant="contained"
             size="large"
             disabled={loading}
-            sx={{ mt: 3, mb: 2, py: 1.5 }}
+            sx={{ mt: 1, mb: 2, py: 1.5 }}
           >
             {loading ? 'Signing In...' : 'Sign In'}
           </Button>

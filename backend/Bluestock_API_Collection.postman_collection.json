@@ -1,0 +1,538 @@
+{
+  "info": {
+    "name": "Bluestock IPO API",
+    "description": "Complete API collection for Bluestock IPO Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('access_token', response.access_token);",
+                  "    pm.collectionVariables.set('refresh_token', response.refresh_token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login/",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/profile/",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "profile", ""]
+            }
+          }
+        },
+        {
+          "name": "Verify Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/verify/",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "verify", ""]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refresh_token\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/logout/",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Companies",
+      "item": [
+        {
+          "name": "List Companies",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/?page=1&search=&sector=&ordering=name",
+              "host": ["{{base_url}}"],
+              "path": ["companies", ""],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "search",
+                  "value": ""
+                },
+                {
+                  "key": "sector",
+                  "value": ""
+                },
+                {
+                  "key": "ordering",
+                  "value": "name"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Company",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test Company Ltd\",\n    \"description\": \"A test company for API testing\",\n    \"sector\": \"technology\",\n    \"founded_year\": 2020,\n    \"headquarters\": \"Mumbai, Maharashtra\",\n    \"website\": \"https://testcompany.com\",\n    \"cin\": \"L72200MH2020PLC123456\",\n    \"market_cap\": 1000.00,\n    \"contact_email\": \"info@testcompany.com\",\n    \"ceo_name\": \"John Doe\",\n    \"cfo_name\": \"Jane Smith\",\n    \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/companies/",
+              "host": ["{{base_url}}"],
+              "path": ["companies", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Company Details",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/1/",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Company",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Company Ltd\",\n    \"description\": \"Updated description\",\n    \"sector\": \"technology\",\n    \"market_cap\": 1500.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/companies/1/",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Company Sectors",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/sectors/",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "sectors", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "IPOs",
+      "item": [
+        {
+          "name": "List IPOs",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ipos/?page=1&search=&status=&sector=&ordering=-ipo_open_date",
+              "host": ["{{base_url}}"],
+              "path": ["ipos", ""],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "search",
+                  "value": ""
+                },
+                {
+                  "key": "status",
+                  "value": ""
+                },
+                {
+                  "key": "sector",
+                  "value": ""
+                },
+                {
+                  "key": "ordering",
+                  "value": "-ipo_open_date"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search IPOs",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ipos/search/?search=tech",
+              "host": ["{{base_url}}"],
+              "path": ["ipos", "search", ""],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "tech"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create IPO",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company\": 1,\n    \"ipo_name\": \"Test IPO\",\n    \"ipo_type\": \"fresh\",\n    \"price_band_min\": 100.00,\n    \"price_band_max\": 120.00,\n    \"lot_size\": 100,\n    \"issue_size\": 500.00,\n    \"fresh_issue_size\": 500.00,\n    \"ipo_open_date\": \"2024-03-01\",\n    \"ipo_close_date\": \"2024-03-03\",\n    \"listing_date\": \"2024-03-08\",\n    \"status\": \"upcoming\",\n    \"description\": \"Test IPO for API testing\",\n    \"objectives\": \"Business expansion and working capital\",\n    \"registrar\": \"Link Intime India Pvt Ltd\",\n    \"lead_managers\": \"ICICI Securities, HDFC Bank\",\n    \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ipos/",
+              "host": ["{{base_url}}"],
+              "path": ["ipos", ""]
+            }
+          }
+        },
+        {
+          "name": "Get IPO Details",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ipos/1/",
+              "host": ["{{base_url}}"],
+              "path": ["ipos", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Update IPO",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company\": 1,\n    \"ipo_name\": \"Updated Test IPO\",\n    \"status\": \"open\",\n    \"subscription_rate\": 2.5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ipos/1/",
+              "host": ["{{base_url}}"],
+              "path": ["ipos", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Get IPO Statuses",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ipos/statuses/",
+              "host": ["{{base_url}}"],
+              "path": ["ipos", "statuses", ""]
+            }
+          }
+        },
+        {
+          "name": "Get IPO Statistics",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ipos/stats/",
+              "host": ["{{base_url}}"],
+              "path": ["ipos", "stats", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Documents",
+      "item": [
+        {
+          "name": "Upload Document",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "document_type",
+                  "value": "rhp",
+                  "type": "text"
+                },
+                {
+                  "key": "title",
+                  "value": "Red Herring Prospectus",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Official RHP document",
+                  "type": "text"
+                },
+                {
+                  "key": "is_public",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/ipos/1/upload/",
+              "host": ["{{base_url}}"],
+              "path": ["ipos", "1", "upload", ""]
+            }
+          }
+        },
+        {
+          "name": "Download Document",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ipos/1/download/?doc_type=rhp",
+              "host": ["{{base_url}}"],
+              "path": ["ipos", "1", "download", ""],
+              "query": [
+                {
+                  "key": "doc_type",
+                  "value": "rhp"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List IPO Documents",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ipos/1/documents/",
+              "host": ["{{base_url}}"],
+              "path": ["ipos", "1", "documents", ""]
+            }
+          }
+        },
+        {
+          "name": "Delete Document",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ipos/1/delete-doc/?doc_type=rhp",
+              "host": ["{{base_url}}"],
+              "path": ["ipos", "1", "delete-doc", ""],
+              "query": [
+                {
+                  "key": "doc_type",
+                  "value": "rhp"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Dashboard",
+      "item": [
+        {
+          "name": "Dashboard Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/admin/stats/",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "stats", ""]
+            }
+          }
+        },
+        {
+          "name": "Admin Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/admin/logs/?page=1&limit=50&days=30",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "logs", ""],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "days",
+                  "value": "30"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Activity Timeline",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/admin/activity/?days=30",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "activity", ""],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "30"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

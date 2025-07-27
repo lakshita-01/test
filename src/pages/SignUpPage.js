@@ -1,5 +1,5 @@
 // src/pages/SignUpPage.js
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Container,
   Paper,
@@ -22,9 +22,16 @@ import {
   Person,
   Visibility, 
   VisibilityOff, 
-  Google as GoogleIcon 
+  Google as GoogleIcon,
+  Security
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import ReCAPTCHA from 'react-google-recaptcha';
+import api from '../utils/api';
+import { useApp } from '../context/AppContext';
+
+// reCAPTCHA site key (you'll need to get this from Google reCAPTCHA console)
+const RECAPTCHA_SITE_KEY = process.env.REACT_APP_RECAPTCHA_SITE_KEY || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'; // Test key
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -48,6 +55,9 @@ const GoogleButton = styled(Button)(({ theme }) => ({
 
 const SignUpPage = () => {
   const navigate = useNavigate();
+  const recaptchaRef = useRef(null);
+  const { state } = useApp();
+  const { darkMode } = state;
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -61,6 +71,7 @@ const SignUpPage = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState({ show: false, message: '', type: 'info' });
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -75,6 +86,21 @@ const SignUpPage = () => {
         [name]: ''
       }));
     }
+  };
+
+  const handleRecaptchaChange = (token) => {
+    setRecaptchaToken(token);
+    // Clear recaptcha error when user completes it
+    if (errors.recaptcha) {
+      setErrors(prev => ({
+        ...prev,
+        recaptcha: ''
+      }));
+    }
+  };
+
+  const handleRecaptchaExpired = () => {
+    setRecaptchaToken(null);
   };
 
   const validateForm = () => {
@@ -111,6 +137,10 @@ const SignUpPage = () => {
     if (!formData.agreeToTerms) {
       newErrors.agreeToTerms = 'You must agree to the terms and conditions';
     }
+
+    if (!recaptchaToken) {
+      newErrors.recaptcha = 'Please verify that you are not a robot';
+    }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -124,39 +154,27 @@ const SignUpPage = () => {
     setLoading(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Mock registration logic
-      const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-      
-      // Check if user already exists
-      if (existingUsers.find(user => user.email === formData.email)) {
-        setAlert({
-          show: true,
-          message: 'An account with this email already exists. Please sign in instead.',
-          type: 'error'
-        });
-        return;
-      }
-      
-      // Add new user
-      const newUser = {
-        id: Date.now(),
+      // Prepare registration data
+      const registrationData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        authMethod: 'email',
-        createdAt: new Date().toISOString()
+        password: formData.password,
+        recaptchaToken: recaptchaToken,
+        agreeToTerms: formData.agreeToTerms
       };
+
+      // Call API for registration with reCAPTCHA verification
+      const result = await api.register(registrationData);
+
+      // Handle successful registration
+      if (result.data.token) {
+        localStorage.setItem('authToken', result.data.token);
+      }
       
-      existingUsers.push(newUser);
-      localStorage.setItem('registeredUsers', JSON.stringify(existingUsers));
-      
-      // Auto sign in the user
       localStorage.setItem('user', JSON.stringify({
-        email: newUser.email,
-        name: `${newUser.firstName} ${newUser.lastName}`,
+        email: result.data.user.email,
+        name: `${result.data.user.firstName} ${result.data.user.lastName}`,
         authMethod: 'email'
       }));
       
@@ -165,15 +183,29 @@ const SignUpPage = () => {
         message: 'Account created successfully! Redirecting...',
         type: 'success'
       });
+
+      // Reset reCAPTCHA
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+      }
+      setRecaptchaToken(null);
       
       setTimeout(() => {
         navigate('/');
       }, 1500);
       
     } catch (error) {
+      console.error('Registration error:', error);
+      
+      // Reset reCAPTCHA on error
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+      }
+      setRecaptchaToken(null);
+      
       setAlert({
         show: true,
-        message: 'An error occurred during registration. Please try again.',
+        message: error.message || 'An error occurred during registration. Please try again.',
         type: 'error'
       });
     } finally {
@@ -182,10 +214,20 @@ const SignUpPage = () => {
   };
 
   const handleGoogleSignUp = async () => {
+    // Check if reCAPTCHA is completed
+    if (!recaptchaToken) {
+      setAlert({
+        show: true,
+        message: 'Please complete the reCAPTCHA verification first.',
+        type: 'warning'
+      });
+      return;
+    }
+
     setLoading(true);
     
     try {
-      // Simulate Google OAuth
+      // Simulate Google OAuth with reCAPTCHA verification
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       const googleUser = {
@@ -234,8 +276,9 @@ const SignUpPage = () => {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ py: 4 }}>
-      <StyledPaper>
+    <div className={`${darkMode ? "dark" : ""} min-h-screen transition-all duration-300`}>
+      <Container maxWidth="sm" sx={{ py: 4 }}>
+        <StyledPaper>
         <Box sx={{ textAlign: 'center', mb: 3 }}>
           <Typography variant="h4" component="h1" gutterBottom>
             Sign Up
@@ -400,6 +443,24 @@ const SignUpPage = () => {
             </Typography>
           )}
 
+          {/* reCAPTCHA */}
+          <Box sx={{ mt: 3, mb: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+           
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey={RECAPTCHA_SITE_KEY}
+              onChange={handleRecaptchaChange}
+              onExpired={handleRecaptchaExpired}
+              theme={darkMode ? "dark" : "light"}
+              size="normal"
+            />
+            {errors.recaptcha && (
+              <Typography variant="caption" color="error" sx={{ mt: 1, textAlign: 'center' }}>
+                {errors.recaptcha}
+              </Typography>
+            )}
+          </Box>
+
           <Button
             type="submit"
             fullWidth
@@ -442,6 +503,7 @@ const SignUpPage = () => {
         </Box>
       </StyledPaper>
     </Container>
+    </div>
   );
 };
 

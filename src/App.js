@@ -19,21 +19,31 @@ import { CssBaseline, CircularProgress, Box, Typography, Alert } from '@mui/mate
 import { AppProvider } from './context/AppContext';
 import Layout from './components/Layout/Layout';
 import ErrorBoundary from './components/Common/ErrorBoundary';
+import ScrollToTop from './components/Common/ScrollToTop';
 import CookieConsent from './components/CookieConsent';
 import theme from './theme/theme';
 import './App.css';
 import './styles/global.css';
 
 // Lazy load components for better performance
+const Homepage = lazy(() => import('./components/Homepage/Homepage'));
 const IpoPage = lazy(() => import('./pages/IpoPage'));
 const CommunityPage = lazy(() => import('./pages/CommunityPage'));
 const ProductsPage = lazy(() => import('./pages/ProductsPage'));
 const BrokersPage = lazy(() => import('./pages/BrokersPage'));
+const BrokerComparePage = lazy(() => import('./pages/BrokerComparePage'));
 const LiveNewsPage = lazy(() => import('./pages/LiveNewsPage'));
+const ContactUsPage = lazy(() => import('./pages/ContactUsPage'));
+const ApiPage = lazy(() => import('./pages/ApiPage'));
+const IpoAnalyticsPage = lazy(() => import('./pages/IpoAnalyticsPage'));
 const SignInPage = lazy(() => import('./pages/SignInPage'));
 const SignUpPage = lazy(() => import('./pages/SignUpPage'));
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
 const AdminLogin = lazy(() => import('./components/Admin/AdminLogin'));
 const IpoAdminDashboard = lazy(() => import('./components/IpoAdminDashboard'));
+const StockSchoolPage = lazy(() => import('./pages/StockSchoolPage'));
+const TestAppLinkPage = lazy(() => import('./pages/TestAppLinkPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 /**
@@ -75,19 +85,29 @@ function App() {
         <CssBaseline />
         <AppProvider>
           <Router>
+            <ScrollToTop />
             <Layout>
               <Suspense fallback={<LoadingFallback />}>
                 <Routes>
                   {/* Public Routes */}
-                  <Route path="/" element={<IpoPage />} />
+                  <Route path="/" element={<Homepage />} />
+                  <Route path="/ipo" element={<IpoPage />} />
                   <Route path="/community" element={<CommunityPage />} />
                   <Route path="/products" element={<ProductsPage />} />
                   <Route path="/brokers" element={<BrokersPage />} />
+                  <Route path="/broker-compare" element={<BrokerComparePage />} />
                   <Route path="/live-news" element={<LiveNewsPage />} />
+                  <Route path="/contact" element={<ContactUsPage />} />
+                  <Route path="/api" element={<ApiPage />} />
+                  <Route path="/ipo-analytics" element={<IpoAnalyticsPage />} />
+                  <Route path="/stock-school" element={<StockSchoolPage />} />
+                  <Route path="/test-app-link" element={<TestAppLinkPage />} />
                   
                   {/* Authentication Routes */}
                   <Route path="/signin" element={<SignInPage />} />
                   <Route path="/signup" element={<SignUpPage />} />
+                  <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                  <Route path="/reset-password" element={<ResetPasswordPage />} />
                   
                   {/* Admin Routes */}
                   <Route path="/admin/login" element={<AdminLogin />} />

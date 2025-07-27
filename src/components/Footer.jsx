@@ -14,6 +14,7 @@
  */
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faXTwitter, 
@@ -87,10 +88,10 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#" className="group text-gray-600 hover:text-blue-600 transition-all duration-300 text-sm leading-relaxed flex items-center">
+                <Link to="/contact" className="group text-gray-600 hover:text-blue-600 transition-all duration-300 text-sm leading-relaxed flex items-center">
                   <span className="w-2 h-2 bg-blue-500 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                   Contact Us
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className="group text-gray-600 hover:text-blue-600 transition-all duration-300 text-sm leading-relaxed flex items-center">
@@ -99,10 +100,10 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#" className="group text-gray-600 hover:text-blue-600 transition-all duration-300 text-sm leading-relaxed flex items-center">
+                <Link to="/community" className="group text-gray-600 hover:text-blue-600 transition-all duration-300 text-sm leading-relaxed flex items-center">
                   <span className="w-2 h-2 bg-blue-500 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                   Community
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className="group text-gray-600 hover:text-blue-600 transition-all duration-300 text-sm leading-relaxed flex items-center">

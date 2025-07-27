@@ -16,6 +16,28 @@ const createResponse = (data, success = true) => ({
   message: success ? 'Success' : 'Error occurred'
 });
 
+// Mock reCAPTCHA verification function
+const verifyRecaptcha = async (token) => {
+  await delay(500); // Simulate verification delay
+  
+  // In a real application, you would verify the token with Google's API
+  // For testing purposes, we'll accept any non-empty token
+  if (!token) {
+    return false;
+  }
+  
+  // Mock verification - in production, you would call:
+  // const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  //   body: `secret=${RECAPTCHA_SECRET_KEY}&response=${token}`
+  // });
+  // const result = await response.json();
+  // return result.success;
+  
+  return true; // Mock success for development
+};
+
 // Authentication token management
 let authToken = localStorage.getItem('authToken');
 
@@ -50,6 +72,57 @@ const api = {
   logout: () => {
     authToken = null;
     localStorage.removeItem('authToken');
+  },
+
+  register: async (userData) => {
+    await delay(1500); // Simulate network delay
+    
+    // Verify reCAPTCHA token (mock verification)
+    if (!userData.recaptchaToken) {
+      throw new Error('reCAPTCHA verification required');
+    }
+
+    // Mock reCAPTCHA verification
+    const recaptchaValid = await verifyRecaptcha(userData.recaptchaToken);
+    if (!recaptchaValid) {
+      throw new Error('reCAPTCHA verification failed. Please try again.');
+    }
+    
+    // Check if user already exists
+    const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+    if (existingUsers.find(user => user.email === userData.email)) {
+      throw new Error('An account with this email already exists');
+    }
+    
+    // Create new user
+    const newUser = {
+      id: Date.now().toString(),
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
+      authMethod: 'email',
+      createdAt: new Date().toISOString(),
+      recaptchaVerified: true
+    };
+    
+    // Store user
+    existingUsers.push(newUser);
+    localStorage.setItem('registeredUsers', JSON.stringify(existingUsers));
+    
+    // Generate auth token
+    authToken = 'mock-jwt-token-' + Date.now();
+    localStorage.setItem('authToken', authToken);
+    
+    return createResponse({
+      user: {
+        id: newUser.id,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email,
+        authMethod: newUser.authMethod
+      },
+      token: authToken
+    });
   },
 
   // IPO CRUD operations
